@@ -7,7 +7,7 @@ const userSchema = new Schema({
   password: String
 });
 
-userSchema.pre('save', (next) => {
+userSchema.pre('save', function (next) {
   const user = this;
 
   bcrypt.genSalt(10, (err, salt) => {
@@ -18,7 +18,7 @@ userSchema.pre('save', (next) => {
 
       user.password = hash;
       next();
-    });
+    }); 
   });
 });
 
