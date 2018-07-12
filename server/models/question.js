@@ -12,8 +12,9 @@ const questionSchema = new Schema({
     badStartsOn: String,
     normalStartsOn: String,
     values: [{
+      key: Number,
       label: String,
-      value: String
+      value: Number
     }]
   }
 });
