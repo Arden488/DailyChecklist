@@ -2,11 +2,7 @@
   <el-menu
     :router="true" 
     :default-active="$route.path"
-    class="header-navigation"
-    mode="horizontal"
-    background-color="#545c64"
-    text-color="#fff"
-    active-text-color="#ffd04b">
+    class="header-navigation">
     
     <el-menu-item 
       class="header-navigation__item" 
@@ -22,13 +18,23 @@
     >
       Add data
     </el-menu-item>
-    <el-menu-item 
-      class="header-navigation__item" 
-      index="/questions" 
-      :route="'/questions'"
-    >
-      Questions list
-    </el-menu-item>
+    <el-submenu index="">
+      <template slot="title">Questions</template>
+      <el-menu-item 
+        class="header-navigation__item" 
+        index="/questions" 
+        :route="'/questions'"
+      >
+        List
+      </el-menu-item>
+      <el-menu-item 
+        class="header-navigation__item" 
+        index="/questions/create" 
+        :route="'/questions/create'"
+      >
+        Create
+      </el-menu-item>
+    </el-submenu>
 
   </el-menu>
 </template>
