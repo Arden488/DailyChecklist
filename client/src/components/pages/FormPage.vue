@@ -1,5 +1,8 @@
 <template>
-  <AppForm />
+  <div>
+    <h1>Add routine data</h1>
+    <AppForm />
+  </div>
 </template>
 
 <script>
