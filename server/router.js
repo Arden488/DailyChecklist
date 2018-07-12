@@ -10,13 +10,8 @@ module.exports = (app) => {
   // app.get('/', requireAuth, (req, res) => {
   //   res.send({ test: 'test' })
   // })
-  app.get('/questions', (req, res) => {
-    res.send([{
-      title: 'abc',
-      type: 'boolean'
-    }])
-  });
-  app.post('/addQuestion', requireAuth, Question.addQuestion);
+  app.get('/questions', Question.getQuestions);
+  app.post('/questions', requireAuth, Question.addQuestion);
   app.post('/signin', requireSignin, Auth.signin);
   app.post('/signup', Auth.signup);
 }
