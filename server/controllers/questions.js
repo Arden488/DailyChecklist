@@ -1,5 +1,12 @@
 const Question = require('../models/question');
 
+exports.getQuestions = (req, res) => {
+  Question.find({}, (err, items) => {
+    if (err) res.sendStatus(500);
+    else res.send({ items });
+  });
+}
+
 exports.addQuestion = (req, res, next) => {
   const title = req.body.title;
   const repeat = req.body.repeat;
@@ -11,7 +18,7 @@ exports.addQuestion = (req, res, next) => {
   const optionsNormalStartsOn = req.body.optionsNormalStartsOn;
   const optionsValues = req.body.optionsValues;
   
-  if (!title || !repeat || !type || !value) {
+  if (!title || !repeat || !type) {
     return res.status(422).send({ error: 'Some fields are missing' });
   }
 
