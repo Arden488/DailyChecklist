@@ -56,6 +56,7 @@
 
 <script>
 import axios from 'axios';
+import QuestionsService from '@/services/QuestionsService';
 
 export default {
   name: 'AppForm',
@@ -71,7 +72,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this[formName].fields.forEach(element => {
-            // console.log(element.value);
+            console.log(element.value);
           });
         } else {
           console.log('error submit!!');
@@ -83,6 +84,9 @@ export default {
       this.$refs[formName].resetFields();
     },
     getRangeLength(options) {
+      if (!options.range)
+        return null;
+      
       const range = options.range.split('-');
 
       if (options.reverse)
@@ -92,31 +96,44 @@ export default {
     },
 
     translateIntToTime(int) {
-      return `${int}:00`;
+      let s = int + '';
+      s = s.length === 1 ? '0' + s : s;
+      return `${s}:00`;
     },
 
     getRangeMax(options) {
+      if (!options.range)
+        return null;
+
       const range = options.range.split('-');
       return +range[1];
     },
 
     getRangeMin(options) {
+      if (!options.range)
+        return null;
+
       const range = options.range.split('-');
       return +range[0];
-    }
-  },
-  mounted() {
-    axios.get('http://localhost:3000/questions')
-    .then(response => {
-      response.data.forEach(el => {
+    },
+
+    async getQuestions () {
+      const response = await QuestionsService.fetchQuestions()
+      response.data.items.forEach(el => {
+        if(el.type === 'time') el.value = this.translateIntToTime(el.value);
+        if(el.type === 'mood') el.value = +el.value;
+
         this.appForm.fields.push({
           label: el.title,
-          value: el.value,
+          value: el.value || false,
           type: el.type,
           options: el.options
         });
-      })
-    });
+      });
+    }
+  },
+  mounted() {
+    this.getQuestions()
   }
 }
 </script>
