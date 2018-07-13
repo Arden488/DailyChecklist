@@ -3,7 +3,6 @@
     <h1>List of questions</h1>
     <el-table
       :data="questions"
-      :default-sort = "{prop: '_id', order: 'descending'}"
       style="width: 100%">
       <el-table-column
         label="Title"
@@ -28,7 +27,7 @@
           <el-button
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+            @click="handleDelete(scope.$index, scope.row, questions)">Delete</el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -52,12 +51,50 @@ export default {
     }
   },
   methods: {
-    handleDelete(index, row) {
-      console.log(index, row);
+    handleDelete(index, row, rows) {
+      this.$confirm('This will permanently delete the question. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        rows.splice(index, 1);
+        const response = this.deleteQuestion(row._id);
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        });
+      });
     },
     
     handleEdit(index, row) {
-      console.log(index, row);
+      this.$router.push({ name: 'EditQuestion', params: { id: row._id } })
+    },
+
+    async deleteQuestion (id) {
+      try {
+        const response = await QuestionsService.deleteQuestion(id);
+        if (await response.status) {
+          if (response.status === 200) {
+            this.$message({
+              type: 'success',
+              message: 'Delete completed'
+            });
+          } else {
+            this.$message({
+              type: 'error',
+              message: 'Error occurred while deleting'
+            });
+          }
+        }
+      } catch(e) {
+        console.log(e);
+        this.$message({
+          type: 'error',
+          message: 'Error occurred while deleting'
+        });
+      }
     },
 
     async getQuestions () {
