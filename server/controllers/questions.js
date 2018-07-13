@@ -7,8 +7,15 @@ exports.getQuestions = (req, res) => {
   });
 }
 
+exports.getQuestion = (req, res) => {
+  Question.findById(req.params.id, (err, item) => {
+    if (err) res.sendStatus(500);
+    else res.status(200).send(item);
+  });
+}
+
 exports.deleteQuestion = (req, res) => {
-  Question.remove({ _id: req.params.id }, (err, items) => {
+  Question.remove({ _id: req.params.delete }, (err, items) => {
     if (err) res.sendStatus(500);
     else res.sendStatus(200)
   });
@@ -23,7 +30,7 @@ exports.updateQuestion = (req, res) => {
     options: {
       range: req.body.optionsRange,
       reverse: req.body.optionsReverse,
-      badStartsOn: req.body.optionsBadStartsOn,
+      badEndsOn: req.body.optionsBadEndsOn,
       goodStartsOn: req.body.optionsGoodStartsOn,
       values: req.body.optionsValues
     }
@@ -51,7 +58,7 @@ exports.addQuestion = (req, res, next) => {
     options: {
       range: req.body.optionsRange,
       reverse: req.body.optionsReverse,
-      badStartsOn: req.body.optionsBadStartsOn,
+      badEndsOn: req.body.optionsBadEndsOn,
       goodStartsOn: req.body.optionsGoodStartsOn,
       values: req.body.optionsValues
     }
@@ -65,9 +72,7 @@ exports.addQuestion = (req, res, next) => {
 
   question.save(err => {
     if (err) return next(err);
-    else return res.status(200).json({
-      success: true
-    });
+    else return res.sendStatus(200);
 
     // return next();
   });
