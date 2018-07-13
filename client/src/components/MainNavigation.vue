@@ -13,10 +13,10 @@
     </el-menu-item>
     <el-menu-item 
       class="header-navigation__item" 
-      index="/form" 
-      :route="'/form'"
+      index="/reports/create" 
+      :route="'/reports/create'"
     >
-      Add data
+      Add report
     </el-menu-item>
     <el-submenu index="">
       <template slot="title">Questions</template>
