@@ -9,8 +9,8 @@ const questionSchema = new Schema({
   options: {
     range: String,
     reverse: Boolean,
-    badStartsOn: String,
-    normalStartsOn: String,
+    badEndsOn: String,
+    goodStartsOn: String,
     values: [{
       key: Number,
       label: String,
