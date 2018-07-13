@@ -55,10 +55,11 @@
 </template>
 
 <script>
+import ReportsService from '@/services/ReportsService';
 import QuestionsService from '@/services/QuestionsService';
 
 export default {
-  name: 'AppForm',
+  name: 'CreateReportPage',
   data() {
     return {
       appForm: {
@@ -70,9 +71,17 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this[formName].fields.forEach(element => {
-            console.log(element.value);
+          const formData = { answers: [] };
+          this[formName].fields.forEach(field => {
+            formData.answers.push({
+              label: field.label,
+              type: field.type,
+              value: field.value.toString(),
+              options: field.options
+            });
           });
+          formData.date = new Date();
+          this.createReport(formData);
         } else {
           this.$message({
             type: 'error',
@@ -81,6 +90,11 @@ export default {
           return false;
         }
       });
+    },
+    async createReport(data) {
+      const response = await ReportsService.createReport(data);
+      if (await response.status === 200)
+        this.$router.push({ name: 'Overview' });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
