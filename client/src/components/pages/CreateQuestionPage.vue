@@ -7,16 +7,17 @@
       </el-form-item>
 
       <el-form-item label="Repeat" prop="repeat">
+        <el-checkbox :indeterminate="questionForm.isIndeterminate" v-model="questionForm.checkAll" @change="handleCheckAllChange">Check all</el-checkbox>
         <div>
-          <el-checkbox v-model="questionForm.repeat.mon" label="Monday" border size="mini"></el-checkbox>
-          <el-checkbox v-model="questionForm.repeat.tue" label="Tuesday" border size="mini"></el-checkbox>
-          <el-checkbox v-model="questionForm.repeat.wed" label="Wednesday" border size="mini"></el-checkbox>
-          <el-checkbox v-model="questionForm.repeat.thu" label="Thursday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.mon" @change="handleCheckedDaysChange" label="Monday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.tue" @change="handleCheckedDaysChange" label="Tuesday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.wed" @change="handleCheckedDaysChange" label="Wednesday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.thu" @change="handleCheckedDaysChange" label="Thursday" border size="mini"></el-checkbox>
         </div>
         <div>
-          <el-checkbox v-model="questionForm.repeat.fri" label="Friday" border size="mini"></el-checkbox>
-          <el-checkbox v-model="questionForm.repeat.sat" label="Saturday" border size="mini"></el-checkbox>
-          <el-checkbox v-model="questionForm.repeat.sun" label="Sunday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.fri" @change="handleCheckedDaysChange" label="Friday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.sat" @change="handleCheckedDaysChange" label="Saturday" border size="mini"></el-checkbox>
+          <el-checkbox v-model="questionForm.repeat.sun" @change="handleCheckedDaysChange" label="Sunday" border size="mini"></el-checkbox>
         </div>
       </el-form-item>
 
@@ -45,8 +46,7 @@
         >
           <el-option
             v-for="option in questionForm.options.values"
-            :label="option.label"
-            :value="option.value"
+            :value="option.label"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -64,12 +64,12 @@
             </el-col>
           </el-form-item>
 
-          <el-form-item label="'Bad' ends on">
-            <el-input-number v-model="questionForm.options.badEndsOn" size="small" :min="1" :max="+questionForm.options.goodStartsOn-1"></el-input-number>
-          </el-form-item>
-
           <el-form-item label="'Good' starts on">
             <el-input-number v-model="questionForm.options.goodStartsOn" size="small" :min="+questionForm.options.badEndsOn+1||0" :max="+questionForm.options.rangeEnd"></el-input-number>
+          </el-form-item>
+
+          <el-form-item label="'Bad' ends on">
+            <el-input-number v-model="questionForm.options.badEndsOn" size="small" :min="1" :max="+questionForm.options.goodStartsOn-1"></el-input-number>
           </el-form-item>
         </div>
 
@@ -133,7 +133,7 @@ export default {
         repeat: {
           mon: false,
           tue: false,
-          wed: true,
+          wed: false,
           thu: false,
           fri: false,
           sat: false,
@@ -147,7 +147,9 @@ export default {
           values: [],
           badEndsOn: null,
           goodStartsOn: null
-        }
+        },
+        isIndeterminate: false,
+        checkAll: false
       },
       rules: {
         title: [
@@ -163,6 +165,20 @@ export default {
     }
   },
   methods: {
+    handleCheckAllChange(val) {
+      Object.keys(this.questionForm.repeat).forEach(el => {
+        this.questionForm.repeat[el] = val;
+      });
+      this.questionForm.isIndeterminate = false;
+    },
+    
+    handleCheckedDaysChange(value) {
+      const allDays = Object.keys(this.questionForm.repeat);
+      const checkedEvery = allDays.every(el => this.questionForm.repeat[el] === true);
+      this.questionForm.checkAll = checkedEvery;
+      this.questionForm.isIndeterminate = !checkedEvery && allDays.some(el => this.questionForm.repeat[el] === true);
+    },
+
     switchType() {
       this.questionForm.value = this.questionForm.type === 'boolean' ? false : '';
       this.questionForm.options = {
@@ -236,7 +252,7 @@ export default {
           }
 
           if (this.questionForm.type === 'mood') {
-            formData.optionsBadStartsOn = this.questionForm.options.badEndsOn;
+            formData.optionsBadEndsOn = this.questionForm.options.badEndsOn;
             formData.optionsGoodStartsOn = this.questionForm.options.goodStartsOn;
           }
 
@@ -257,7 +273,7 @@ export default {
     async createQuestion (data) {
       const response = await QuestionsService.createQuestion(data);
 
-      if (await response.data.success)
+      if (await response.status === 200)
         this.$router.push({ name: 'Questions' })
     },
 
@@ -281,6 +297,13 @@ export default {
             value: 1,
             label: ''
           })
+        } else {
+          if (this.questionForm.value !== '') {
+            const exist = this.questionForm.options.values.some(el => {
+              return el.label === this.questionForm.value; 
+            });
+            if (!exist) this.questionForm.value = '';
+          }
         }
       }
     })
