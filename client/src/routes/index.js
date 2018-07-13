@@ -1,5 +1,5 @@
 import Questions from '@/components/pages/QuestionsPage.vue';
-import AppForm from '@/components/pages/FormPage.vue';
+import CreateReport from '@/components/pages/CreateReportPage.vue';
 import Overview from '@/components/pages/OverviewPage.vue';
 import CreateQuestion from '@/components/pages/CreateQuestionPage.vue';
 import EditQuestion from '@/components/pages/EditQuestionPage.vue';
@@ -26,9 +26,9 @@ const routes = [
     component: EditQuestion
   },
   {
-    path: '/form',
-    name: 'AppForm',
-    component: AppForm
+    path: '/reports/create',
+    name: 'CreateReport',
+    component: CreateReport
   }
 ];
 
