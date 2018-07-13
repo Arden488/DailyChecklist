@@ -46,6 +46,7 @@
         >
           <el-option
             v-for="option in questionForm.options.values"
+            :key="option.key"
             :value="option.label"
           ></el-option>
         </el-select>
@@ -172,7 +173,7 @@ export default {
       this.questionForm.isIndeterminate = false;
     },
     
-    handleCheckedDaysChange(value) {
+    handleCheckedDaysChange() {
       const allDays = Object.keys(this.questionForm.repeat);
       const checkedEvery = allDays.every(el => this.questionForm.repeat[el] === true);
       this.questionForm.checkAll = checkedEvery;
@@ -259,12 +260,13 @@ export default {
           if (this.questionForm.type === 'select') {
             formData.optionsValues = this.questionForm.options.values;
           }
-
-          // optionsReverse = req.body.optionsReverse;
           
           this.createQuestion(formData);
         } else {
-          console.log('error submit!!');
+            this.$message({
+              type: 'error',
+              message: 'Error occurred while submiting'
+            });
           return false;
         }
       });

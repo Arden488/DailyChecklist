@@ -59,7 +59,7 @@ export default {
         center: true
       }).then(() => {
         rows.splice(index, 1);
-        const response = this.deleteQuestion(row._id);
+        this.deleteQuestion(row._id);
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -89,7 +89,6 @@ export default {
           }
         }
       } catch(e) {
-        console.log(e);
         this.$message({
           type: 'error',
           message: 'Error occurred while deleting'

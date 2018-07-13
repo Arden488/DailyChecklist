@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import QuestionsService from '@/services/QuestionsService';
 
 export default {
@@ -75,7 +74,10 @@ export default {
             console.log(element.value);
           });
         } else {
-          console.log('error submit!!');
+          this.$message({
+            type: 'error',
+            message: 'Error occurred while submitting'
+          });
           return false;
         }
       });

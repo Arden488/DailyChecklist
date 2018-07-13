@@ -48,6 +48,7 @@
           <el-option value=""></el-option>
           <el-option
             v-for="option in questionForm.options.values"
+            :key="option.key"
             :value="option.label"
           ></el-option>
         </el-select>
@@ -174,7 +175,7 @@ export default {
       this.questionForm.isIndeterminate = false;
     },
     
-    handleCheckedDaysChange(value) {
+    handleCheckedDaysChange() {
       const allDays = Object.keys(this.questionForm.repeat);
       const checkedEvery = allDays.every(el => this.questionForm.repeat[el] === true);
       this.questionForm.checkAll = checkedEvery;
@@ -262,12 +263,13 @@ export default {
           if (this.questionForm.type === 'select') {
             formData.optionsValues = this.questionForm.options.values;
           }
-
-          // optionsReverse = req.body.optionsReverse;
           
           this.updateQuestion(formData);
         } else {
-          console.log('error submit!!');
+          this.$message({
+            type: 'error',
+            message: 'Error occurred while submitting'
+          });
           return false;
         }
       });
@@ -282,8 +284,6 @@ export default {
 
     async getQuestion () {
       const response = await QuestionsService.fetchQuestion(this.$route.params.id);
-
-      console.log(response.data);
 
       this.questionForm.id = response.data._id;
       this.questionForm.title = response.data.title;
