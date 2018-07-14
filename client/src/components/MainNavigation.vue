@@ -16,7 +16,7 @@
       index="/reports/create" 
       :route="'/reports/create'"
     >
-      Add report
+      Submit report
     </el-menu-item>
     <el-submenu index="">
       <template slot="title">Questions</template>
