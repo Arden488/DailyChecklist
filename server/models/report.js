@@ -15,7 +15,8 @@ const reportSchema = new Schema({
       values: [{
         key: Number,
         label: String,
-        value: Number
+        value: Number,
+        color: String
       }]
     }
   }]
