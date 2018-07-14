@@ -9,6 +9,9 @@ const requireSignin = passport.authenticate('local', { session: false })
 
 module.exports = (app) => {
   app.post('/reports', requireAuth, Report.createReport);
+  app.get('/reports', requireAuth, Report.getReports);
+  app.get('/reports/:year/:month/:date', requireAuth, Report.getReportByDate);
+  app.put('/reports/:id', requireAuth, Report.updateReport);
   
   app.delete('/questions/:delete', requireAuth, Question.deleteQuestion);
   app.put('/questions/:id', requireAuth, Question.updateQuestion);
