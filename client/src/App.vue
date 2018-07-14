@@ -41,4 +41,14 @@ body {
   color: #2c3e50;
   margin: 0;
 }
+html,
+body,
+#app {
+  height: 100%;
+  min-height: 100%;
+}
+
+.el-container {
+  min-height: 100%;
+}
 </style>
