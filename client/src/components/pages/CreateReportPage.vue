@@ -1,6 +1,16 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <div style="max-width: 700px">
+      <el-alert
+        v-if="editing"
+        title="Editing existing record"
+        type="info"
+        description="You are not creating a new record, but editing one, because the record for today is already existing."
+        show-icon
+        style="margin-bottom: 30px;"
+      >
+      </el-alert>
+
       <el-form :model="appForm" ref="appForm" label-width="200px">
         <el-form-item
           v-for="(field, index) in appForm.fields"
@@ -16,8 +26,8 @@
             v-if="field.type === 'mood'" 
             v-model="field.value"
             :max="getRangeMax(field.options)"
-            :low-threshold="+field.options.badStartsOn"
-            :high-threshold="+field.options.normalStartsOn"
+            :low-threshold="+field.options.badEndsOn"
+            :high-threshold="+field.options.goodStartsOn"
             :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"
             void-icon-class="icon-rate-face-off"
             :colors="['#FF0000', '#00b4ff', '#00ff18']">
@@ -41,7 +51,7 @@
               v-for="item in field.options.values"
               :key="item.value"
               :label="item.label"
-              :value="item.value">
+              :value="item.label">
             </el-option>
           </el-select>
         </el-form-item>
@@ -50,7 +60,7 @@
           <el-button @click="resetForm('appForm')">Reset</el-button>
         </el-form-item>
       </el-form>
-    </el-card>
+    </div>
   </div>
 </template>
 
@@ -64,7 +74,8 @@ export default {
     return {
       appForm: {
         fields: [],
-      }
+      },
+      editing: false
     };
   },
   methods: {
@@ -81,7 +92,13 @@ export default {
             });
           });
           formData.date = new Date();
-          this.createReport(formData);
+
+          if (this.editing) {
+            formData.id = this[formName].id;
+            this.updateReport(formData);
+          } else {
+            this.createReport(formData);
+          }
         } else {
           this.$message({
             type: 'error',
@@ -91,14 +108,23 @@ export default {
         }
       });
     },
+
+    async updateReport(data) {
+      const response = await ReportsService.updateReport(data);
+      if (await response.status === 200)
+        this.$router.push({ name: 'Overview' });
+    },
+
     async createReport(data) {
       const response = await ReportsService.createReport(data);
       if (await response.status === 200)
         this.$router.push({ name: 'Overview' });
     },
+    
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
+    
     getRangeLength(options) {
       if (!options.range)
         return null;
@@ -146,10 +172,36 @@ export default {
           options: el.options
         });
       });
+
+      this.getReport(new Date());
+    },
+
+    async getReport (date) {
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const dateNum = date.getDate();
+      const response = await ReportsService.getReportByDate(year, month, dateNum);
+      
+      if (response.data.length > 0) {
+        this.appForm.id = response.data[0]._id;
+
+        this.appForm.fields.forEach((field, i) => {
+          const eq = response.data[0].answers[i];
+          if (field.type === 'boolean') {
+            eq.value = !!(eq.value == 'true');
+          } else if (field.type === 'mood') {
+            eq.value = +eq.value;
+          }
+
+          field.value = eq.value;
+
+        this.editing = true;
+        });
+      }
     }
   },
   mounted() {
-    this.getQuestions()
+    this.getQuestions();
   }
 }
 </script>
