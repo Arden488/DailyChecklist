@@ -82,6 +82,14 @@
             <span>&nbsp;&nbsp;-&nbsp;&nbsp;</span>
             <el-input-number v-model="questionForm.options.rangeEnd" size="small" :min="+questionForm.options.rangeStart+1" :max="24"></el-input-number>
           </el-form-item>
+
+          <el-form-item label="'Good' ends on">
+            <el-input-number v-model="questionForm.options.goodStartsOn" size="small" :min="+questionForm.options.rangeStart" :max="+questionForm.options.rangeEnd-1"></el-input-number>
+          </el-form-item>
+
+          <el-form-item label="'Bad' starts on">
+            <el-input-number v-model="questionForm.options.badEndsOn" size="small" :min="+questionForm.options.goodStartsOn+1" :max="+questionForm.options.rangeEnd"></el-input-number>
+          </el-form-item>
         </div>
 
         <div v-if="questionForm.type === 'select'">
@@ -95,7 +103,8 @@
             }"
           >
             <div style="width: 300px; display: inline-block; margin-right: 10px;">
-              <el-input v-model="option.label"></el-input>
+              <el-input v-model="option.label" style="width: 230px; margin-right: 10px; vertical-align: middle;"></el-input>
+              <el-color-picker v-model="option.color" :predefine="questionForm.predefinedColors" style="vertical-align: middle;"></el-color-picker>
             </div>
             <el-button type="danger" icon="el-icon-delete" @click.prevent="removeOption(option)"></el-button>
           </el-form-item>
@@ -152,7 +161,23 @@ export default {
           goodStartsOn: null
         },
         isIndeterminate: false,
-        checkAll: false
+        checkAll: false,
+        predefinedColors: [
+          '#ff4500',
+          '#ff8c00',
+          '#ffd700',
+          '#90ee90',
+          '#00ced1',
+          '#1e90ff',
+          '#c71585',
+          'rgba(255, 69, 0, 0.68)',
+          'rgb(255, 120, 0)',
+          'hsv(51, 100, 98)',
+          'hsva(120, 40, 94, 0.5)',
+          'hsl(181, 100%, 37%)',
+          'hsla(209, 100%, 56%, 0.73)',
+          '#c7158577'
+        ]
       },
       rules: {
         title: [
@@ -199,7 +224,8 @@ export default {
       this.questionForm.options.values.push({
         key: key,
         value: key,
-        label: ''
+        label: '',
+        color: this.questionForm.predefinedColors[key] || ''
       })
     },
 
@@ -253,9 +279,7 @@ export default {
                 '-'
                 + this.questionForm.options.rangeStart + 1; 
             }
-          }
 
-          if (this.questionForm.type === 'mood') {
             formData.optionsBadEndsOn = this.questionForm.options.badEndsOn;
             formData.optionsGoodStartsOn = this.questionForm.options.goodStartsOn;
           }
@@ -346,12 +370,20 @@ export default {
       if (this.questionForm.options.rangeStart >= this.questionForm.options.rangeEnd)
         this.questionForm.options.rangeEnd = this.questionForm.options.rangeStart + 1;
 
+      if (this.questionForm.options.rangeEnd < this.questionForm.options.goodStartsOn)
+        this.questionForm.options.goodStartsOn = this.questionForm.options.rangeEnd;
+
+      // TODO: check if badEndsOn > rangeEnd
+      if (this.questionForm.options.rangeStart > this.questionForm.options.badEndsOn)
+        this.questionForm.options.badEndsOn = this.questionForm.options.rangeStart;
+
       if (this.questionForm.type === 'select') {
         if (this.questionForm.options.values.length === 0) {
           this.questionForm.options.values.push({
             key: 1,
             value: 1,
-            label: ''
+            label: '',
+            color: this.questionForm.predefinedColors[0]
           })
         } else {
           if (this.questionForm.value !== '') {
