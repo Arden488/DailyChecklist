@@ -1,6 +1,9 @@
 import api from '@/services/api';
 
 export default {
+  getReportByDate (year, month, date) {
+    return api().get(`reports/${year}/${month}/${date}`);
+  },
   fetchReport (id) {
     return api().get(`reports/${id}`);
   },
