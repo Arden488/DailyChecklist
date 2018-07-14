@@ -14,6 +14,19 @@ exports.getReport = (req, res) => {
   });
 }
 
+exports.getReportByDate = (req, res) => {
+  const dateStr = `${req.params.year}-${req.params.month}-${req.params.date}`;
+  Report.find({ date: 
+    {
+      '$gte': new Date(`${dateStr}T00:00:00.000Z`), 
+      '$lt': new Date(`${dateStr}T23:59:59.990Z`)
+    } 
+  }, (err, item) => {
+    if (err) res.sendStatus(500);
+    else res.status(200).send(item);
+  });
+}
+
 exports.deleteReport = (req, res) => {
   Report.remove({ _id: req.params.delete }, (err) => {
     if (err) res.sendStatus(500);
@@ -23,14 +36,48 @@ exports.deleteReport = (req, res) => {
 
 exports.updateReport = (req, res) => {
   const data = {
-    // title: req.body.title,
+    date: req.body.date,
+    answers: []
   }
 
+  req.body.answers.forEach(answer => {
+    const answerData = {
+      label: answer.label,
+      fieldType: answer.type,
+      value: answer.value,
+      options: {}
+    };
+
+    if (answer.options.range)
+      answerData.options.range = answer.options.range;
+
+    if (answer.options.badEndsOn)
+      answerData.options.badEndsOn = answer.options.badEndsOn;
+
+    if (answer.options.goodStartsOn)
+      answerData.options.goodStartsOn = answer.options.goodStartsOn;
+
+    if (answer.options.values) {
+      answerData.options.values = [];
+
+      answer.options.values.forEach(value => {
+        answerData.options.values.push({
+          key: value.key,
+          label: value.label,
+          value: value.value,
+          color: value.color
+        })
+      });
+    }
+
+    data.answers.push(answerData);
+  });
+
   Report.findById(req.params.id, (err, item) => {
-    // Object.keys(data).forEach(el => {
-    //   if (item[el] !== data[el])
-    //     item[el] = data[el];
-    // });
+    Object.keys(data).forEach(el => {
+      if (item[el] !== data[el])
+        item[el] = data[el];
+    });
 
     item.save(err => {
       if (err) res.sendStatus(500);
@@ -53,23 +100,24 @@ exports.createReport = (req, res, next) => {
       options: {}
     };
 
-    if (answer.range)
-      answerData.options.range = answer.range;
+    if (answer.options.range)
+      answerData.options.range = answer.options.range;
 
-    if (answer.badEndsOn)
-      answerData.options.badEndsOn = answer.badEndsOn;
+    if (answer.options.badEndsOn)
+      answerData.options.badEndsOn = answer.options.badEndsOn;
 
-    if (answer.goodStartsOn)
-      answerData.options.goodStartsOn = answer.goodStartsOn;
+    if (answer.options.goodStartsOn)
+      answerData.options.goodStartsOn = answer.options.goodStartsOn;
 
-    if (answer.values) {
+    if (answer.options.values) {
       answerData.options.values = [];
 
-      answer.values.forEach(value => {
+      answer.options.values.forEach(value => {
         answerData.options.values.push({
           key: value.key,
           label: value.label,
-          value: value.value
+          value: value.value,
+          color: value.color
         })
       });
     }
