@@ -1,10 +1,13 @@
+import dotenv from 'dotenv';
 import axios from 'axios';
 
-const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1YjQ1MjhjNzBjYTMwNjEyMjcwN2Q5MDMifQ.lzEogpzuXLUqhPfEJHmjsUxK5MhU5BzH5s4WouunBlI';
+dotenv.config();
+
+const token = process.env.TMP_TOKEN;
 
 export default () => {
   return axios.create({
-    baseURL: 'http://localhost:3030',
+    baseURL: process.env.SERVER_URL || 'http://localhost:3030',
     headers: { 'Authorization': "bearer " + token }
   })
 }
