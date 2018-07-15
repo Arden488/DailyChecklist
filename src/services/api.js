@@ -1,13 +1,11 @@
-import dotenv from 'dotenv';
 import axios from 'axios';
+import { SERVER_URL, TMP_TOKEN } from '../config';
 
-dotenv.config();
-
-const token = process.env.TMP_TOKEN;
+const token = TMP_TOKEN;
 
 export default () => {
   return axios.create({
-    baseURL: process.env.SERVER_URL || 'http://localhost:3030',
+    baseURL: SERVER_URL[process.env.NODE_ENV],
     headers: { 'Authorization': "bearer " + token }
   })
 }
