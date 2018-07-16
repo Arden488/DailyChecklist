@@ -2,71 +2,72 @@
   <div>
     <h1>Overview</h1>
 
-    <div class="overview-table">
-      <div class="overview-table__header">
-        <div class="overview-table__col-head overview-table__col-head_first">&nbsp;</div>
-        <div class="overview-table__col-head" v-for="day in days">
-          <!-- {{days[new Date(report.date).getDay()-1]}} -->
-          {{day}}
-        </div>
-      </div>
-
-      <div class="overview-table__body">
-        <div class="overview-table__col overview-table__col_first">
-          <div class="overview-table__row" v-for="question in questions">
-            {{question}}
+    <div class="overview-table-box">
+      <div class="overview-table">
+        <div class="overview-table__header">
+          <div class="overview-table__col-head overview-table__col-head_first">&nbsp;</div>
+          <div class="overview-table__col-head" v-for="day in days">
+            {{day}}
           </div>
         </div>
-        <div class="overview-table__col" v-for="day in days">
-          <div class="overview-table__row" v-if="reports[day]" v-for="(question, index) in questions">
-            <div v-if="reports[day][index].fieldType === 'time'">
-              <el-tooltip :content="reports[day][index].value" placement="top">
-                <div class="overview-table__cell overview-table__cell_green" v-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 2">
-                  <div class="overview-table__dot"></div>
-                </div>
-                <div class="overview-table__cell overview-table__cell_orange" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 1">
-                  <div class="overview-table__dot"></div>
-                </div>
-                <div class="overview-table__cell overview-table__cell_red" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 0">
-                  <div class="overview-table__dot"></div>
-                </div>
-              </el-tooltip>
-            </div>
-            
-            <div v-if="reports[day][index].fieldType === 'boolean'">
-              <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value == 'true'">
-                <i class="el-icon-check"></i>
-              </div>
-              <div class="overview-table__cell overview-table__cell_red" v-if="reports[day][index].value == 'false'">
-                <i class="el-icon-close"></i>
-              </div>
-            </div>
 
-            <div v-if="reports[day][index].fieldType === 'mood'">
-              <el-tooltip :content="reports[day][index].value" placement="top">
-                <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value >= 7">
-                  <i class="icon-rate-face-3" style="color: rgb(0, 169, 16)"></i>
-                </div>
-                <div class="overview-table__cell overview-table__cell_red" v-else-if="reports[day][index].value <= 4">
-                  <i class="icon-rate-face-1" style="color: rgb(255, 0, 0)"></i>
-                </div>
-                <div class="overview-table__cell overview-table__cell_blue" v-else>
-                  <i class="icon-rate-face-2" style="color: #00b4ff"></i>
-                </div>
-              </el-tooltip>
-            </div>
-
-            <div v-if="reports[day][index].fieldType === 'select'">
-              <el-tooltip :content="reports[day][index].selectedOption.label" placement="top">
-                <div class="overview-table__cell" :style="{ background: addColorOpacity(reports[day][index].selectedOption.color, .12) } ">
-                  <!-- v-if="reports[day][index].value === 2" -->
-                  <div class="overview-table__dot" :style="{ background: reports[day][index].selectedOption.color } "></div>
-                </div>
-              </el-tooltip>
+        <div class="overview-table__body">
+          <div class="overview-table__col overview-table__col_first">
+            <div class="overview-table__row" v-for="question in questions">
+              {{question}}
             </div>
           </div>
-          <div class="overview-table__row overview-table__row_tobefilled" v-else-if="day > new Date().getDate()">&nbsp;</div>
-          <div class="overview-table__row overview-table__row_empty" v-else>&nbsp;</div>
+          <div class="overview-table__col" v-for="day in days">
+            <div class="overview-table__row" v-if="reports[day]" v-for="(question, index) in questions">
+              <div v-if="reports[day][index].fieldType === 'time'">
+                <el-tooltip :content="reports[day][index].value" placement="top">
+                  <div class="overview-table__cell overview-table__cell_green" v-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 2">
+                    <div class="overview-table__dot"></div>
+                  </div>
+                  <div class="overview-table__cell overview-table__cell_orange" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 1">
+                    <div class="overview-table__dot"></div>
+                  </div>
+                  <div class="overview-table__cell overview-table__cell_red" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 0">
+                    <div class="overview-table__dot"></div>
+                  </div>
+                </el-tooltip>
+              </div>
+              
+              <div v-if="reports[day][index].fieldType === 'boolean'">
+                <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value == 'true'">
+                  <i class="el-icon-check"></i>
+                </div>
+                <div class="overview-table__cell overview-table__cell_red" v-if="reports[day][index].value == 'false'">
+                  <i class="el-icon-close"></i>
+                </div>
+              </div>
+
+              <div v-if="reports[day][index].fieldType === 'mood'">
+                <el-tooltip :content="reports[day][index].value" placement="top">
+                  <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value >= 7">
+                    <i class="icon-rate-face-3" style="color: rgb(0, 169, 16)"></i>
+                  </div>
+                  <div class="overview-table__cell overview-table__cell_red" v-else-if="reports[day][index].value <= 4">
+                    <i class="icon-rate-face-1" style="color: rgb(255, 0, 0)"></i>
+                  </div>
+                  <div class="overview-table__cell overview-table__cell_blue" v-else>
+                    <i class="icon-rate-face-2" style="color: #00b4ff"></i>
+                  </div>
+                </el-tooltip>
+              </div>
+
+              <div v-if="reports[day][index].fieldType === 'select'">
+                <el-tooltip :content="reports[day][index].selectedOption.label" placement="top">
+                  <div class="overview-table__cell" :style="{ background: addColorOpacity(reports[day][index].selectedOption.color, .12) } ">
+                    <!-- v-if="reports[day][index].value === 2" -->
+                    <div class="overview-table__dot" :style="{ background: reports[day][index].selectedOption.color } "></div>
+                  </div>
+                </el-tooltip>
+              </div>
+            </div>
+            <div class="overview-table__row overview-table__row_tobefilled" v-else-if="day > new Date().getDate()">&nbsp;</div>
+            <div class="overview-table__row overview-table__row_empty" v-else>&nbsp;</div>
+          </div>
         </div>
       </div>
     </div>
@@ -168,7 +169,12 @@ export default {
 </script>
 
 <style>
+  .overview-table-box {
+    overflow: scroll;
+  }
+
   .overview-table {
+    min-width: 1500px;
     /* display: inline-block; */
   }
   .overview-table__header {
