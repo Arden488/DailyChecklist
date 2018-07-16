@@ -8,6 +8,9 @@ import locale from 'element-ui/lib/locale'
 
 import App from './App.vue';
 
+import DefaultLayout from './components/layouts/Default.vue';
+import CleanLayout from './components/layouts/Clean.vue';
+
 locale.use(lang);
 
 Vue.config.productionTip = false
@@ -15,6 +18,22 @@ Vue.use(VueRouter);
 Vue.use(ElementUI);
 
 const router = new VueRouter({ mode: 'history', routes });
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const accessToken = localStorage.getItem('access_token');
+
+  if (requiresAuth && !accessToken) {
+    next({
+      name: 'Sign In'
+    })
+  }
+
+  next()
+});
+
+Vue.component('default-layout', DefaultLayout);
+Vue.component('clean-layout', CleanLayout);
 
 new Vue({
   router,
