@@ -56,9 +56,16 @@ export default {
     },
     async signIn(data) {
       const response = await AuthService.signIn(data);
-      if (await response.status === 200) {
+      if (await response && response.status === 200) {
         localStorage.setItem('access_token', response.data.token);
+        localStorage.setItem('user_name', response.data.name);
+        localStorage.setItem('user_id', response.data.id);
         this.$router.push({ name: 'Overview' });
+      } else {
+        this.$message({
+          type: 'error',
+          message: 'Error while trying to sign in'
+        });
       }
     }
   }
