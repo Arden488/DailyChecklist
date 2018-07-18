@@ -55,16 +55,19 @@ export default {
       })
     },
     async signIn(data) {
-      const response = await AuthService.signIn(data);
-      if (await response && response.status === 200) {
-        localStorage.setItem('access_token', response.data.token);
-        localStorage.setItem('user_name', response.data.name);
-        localStorage.setItem('user_id', response.data.id);
-        this.$router.push({ name: 'Overview' });
-      } else {
+      try {
+        const response = await AuthService.signIn(data);
+        if (response.status === 200) {
+          localStorage.setItem('access_token', response.data.token);
+          localStorage.setItem('user_name', response.data.name);
+          localStorage.setItem('user_id', response.data.id);
+          this.$router.push({ name: 'Overview' });
+        }
+      } catch (error) {
+        this.$refs['loginForm'].resetFields();
         this.$message({
           type: 'error',
-          message: 'Error while trying to sign in'
+          message: error.response.data.message || 'Error while trying to sign in'
         });
       }
     }
