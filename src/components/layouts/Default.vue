@@ -6,9 +6,8 @@
     <el-container>
       <el-header style="text-align: right; font-size: 12px; background-color: rgb(238, 241, 246); line-height: 60px;">
         <el-dropdown trigger="click" :hide-on-click="false" @command="handleCommand">
-          <el-button size="mini" icon="el-icon-setting">User</el-button>
+          <el-button size="mini" icon="el-icon-setting">{{user.name}}</el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>Profile</el-dropdown-item>
             <el-dropdown-item command="signOut">Sign Out</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -26,6 +25,14 @@ import MainNavigation from './../MainNavigation.vue'
 export default {
   components: {
     MainNavigation
+  },
+  data () {
+    return {
+      user: {
+        id: localStorage.getItem('user_id'),
+        name: localStorage.getItem('user_name')
+      }
+    }
   },
   methods: {
     handleCommand(command) {
