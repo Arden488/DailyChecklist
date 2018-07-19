@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "heroku-postbuild": "npm install --only=dev --no-shrinkwrap && npm run build"
+    "start": "node server.js",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -19,8 +19,12 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-rc.4",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.4",
+    "@vue/cli-plugin-unit-jest": "^3.0.0-rc.5",
     "@vue/cli-service": "^3.0.0-rc.4",
-    "vue-template-compiler": "^2.5.16"
+    "@vue/test-utils": "^1.0.0-beta.20",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.0.1",
+    "jest-localstorage-mock": "^2.2.0"
   },
   "eslintConfig": {
     "root": true,
