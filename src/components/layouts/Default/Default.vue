@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import MainNavigation from './../MainNavigation.vue'
+import MainNavigation from './../../MainNavigation.vue'
 
 export default {
   components: {
