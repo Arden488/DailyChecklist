@@ -6,19 +6,19 @@
       <div class="overview-table">
         <div class="overview-table__header">
           <div class="overview-table__col-head overview-table__col-head_first">&nbsp;</div>
-          <div class="overview-table__col-head" v-for="day in days">
+          <div class="overview-table__col-head" v-for="day in days" :key="day">
             {{day}}
           </div>
         </div>
 
         <div class="overview-table__body">
           <div class="overview-table__col overview-table__col_first">
-            <div class="overview-table__row" v-for="question in questions">
+            <div class="overview-table__row" v-for="question in questions" :key="question._id">
               {{question}}
             </div>
           </div>
-          <div class="overview-table__col" v-for="day in days">
-            <div class="overview-table__row" v-if="reports[day]" v-for="(question, index) in questions">
+          <div class="overview-table__col" v-for="day in days" :key="day">
+            <div class="overview-table__row" v-if="reports[day]" v-for="(question, index) in questions"  :key="question._id">
               <div v-if="reports[day][index].fieldType === 'time'">
                 <el-tooltip :content="reports[day][index].value" placement="top">
                   <div class="overview-table__cell overview-table__cell_green" v-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 2">
@@ -109,7 +109,7 @@ export default {
     getOptionData(item) {
       let returnOption = null;
 
-      item.options.values.forEach((el, i) => {
+      item.options.values.forEach(el => {
         if (el.label === item.value)
           returnOption = el;
       });
