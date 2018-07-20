@@ -8,8 +8,8 @@ import locale from 'element-ui/lib/locale'
 
 import App from './App.vue';
 
-import DefaultLayout from './components/layouts/Default/Default.vue';
-import CleanLayout from './components/layouts/Clean/Clean.vue';
+import DefaultLayout from './layouts/Default/Default.vue';
+import CleanLayout from './layouts/Clean/Clean.vue';
 
 locale.use(lang);
 

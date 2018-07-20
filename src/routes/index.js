@@ -1,9 +1,9 @@
-import Questions from '@/components/pages/QuestionsPage.vue';
-import CreateReport from '@/components/pages/CreateReportPage.vue';
-import Overview from '@/components/pages/OverviewPage.vue';
-import CreateQuestion from '@/components/pages/CreateQuestionPage.vue';
-import EditQuestion from '@/components/pages/EditQuestionPage.vue';
-import SignInPage from '@/components/pages/SignInPage.vue'
+import Questions from '@/pages/QuestionsPage.vue';
+import CreateReport from '@/pages/CreateReportPage.vue';
+import Overview from '@/pages/OverviewPage.vue';
+import CreateQuestion from '@/pages/CreateQuestionPage.vue';
+import EditQuestion from '@/pages/EditQuestionPage.vue';
+import SignInPage from '@/pages/SignInPage.vue'
 
 const routes = [
   {
