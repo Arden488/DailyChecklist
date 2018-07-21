@@ -37,14 +37,10 @@ export default {
           repeat.split(',').forEach(el => {
             this.passedQuestionForm.repeat[el] = true;
           });
-          this.passedQuestionForm.checkAll = false;
-          if (repeat.split(',').length > 0) this.passedQuestionForm.isIndeterminate = true;
         } else {
           Object.keys(this.passedQuestionForm.repeat).forEach(el => {
             this.passedQuestionForm.repeat[el] = true;
           });
-          this.passedQuestionForm.isIndeterminate = false;
-          this.passedQuestionForm.checkAll = true;
         }
       }
 
