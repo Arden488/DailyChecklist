@@ -76,8 +76,8 @@ export default {
   props: ['reports', 'questions'],
   data () {
     return {
-      year: 2018,
-      month: 7,
+      year: new Date().getFullYear(),
+      month: new Date().getMonth()+1,
       numberOfDays: 0,
       days: [],
       namesOfDay: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
