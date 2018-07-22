@@ -1,6 +1,5 @@
 <template>
   <el-form :model="appForm" ref="appForm" label-width="200px">
-    {{appForm.fields}}
     <el-form-item
       v-for="(field, index) in appForm.fields"
       :label="field.label"
@@ -56,7 +55,7 @@ import ReportsService from '@/services/ReportsService';
 
 export default {
   name: 'ReportForm',
-  prop: ['passedReportForm'],
+  props: ['passedReportForm', 'translateIntToTime'],
   data () {
     return {
       appForm: Object.assign({

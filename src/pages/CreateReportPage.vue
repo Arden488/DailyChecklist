@@ -1,7 +1,6 @@
 <template>
   <div>
-    {{passedReportForm.fields.length}}
-    <div style="max-width: 700px" v-if="passedReportForm.fields.length">
+    <div style="max-width: 700px" v-if="passedReportForm.fields.length > 0">
       <el-alert
         v-if="editing"
         title="Editing existing record"
@@ -12,8 +11,9 @@
       >
       </el-alert>
 
-      <ReportForm :passedReportForm="passedReportForm" />
+      
     </div>
+    <ReportForm :passedReportForm="passedReportForm" :translateIntToTime="translateIntToTime" />
   </div>
 </template>
 
