@@ -67,7 +67,7 @@ export default {
         this.$refs['loginForm'].resetFields();
         this.$message({
           type: 'error',
-          message: error.response.data.message || 'Error while trying to sign in'
+          message: (error.response && error.response.data.message) || 'Error while trying to sign in'
         });
       }
     }
