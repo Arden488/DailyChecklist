@@ -4,28 +4,22 @@ import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ElementUI from 'element-ui';
-import Default from '../Default.vue';
+import MainNavigation from '../MainNavigation.vue';
+import routes from '@/routes';
 
 const localVue = createLocalVue();
+localVue.use(ElementUI);
 localVue.use(VueRouter);
+const router = new VueRouter({ routes });
 
-describe('Default layout', () => {
+describe('MainNavigation component', () => {
   it('is a Vue instance', () => {
-    localVue.use(ElementUI);
-    const wrapper = shallowMount(Default, { 
-      localVue
-    });
+    const wrapper = shallowMount(MainNavigation, { localVue, router });
     expect(wrapper.isVueInstance).toBeTruthy()
   })
 
   it('is renders correctly', () => {
-    const wrapper = shallowMount(Default, { 
-      localVue,
-      stubs: [
-        'el-container',
-        'el-aside',
-      ]
-    });
+    const wrapper = shallowMount(MainNavigation, { localVue, router });
     expect(wrapper).toMatchSnapshot()
   })
 });

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MainNavigation component is renders correctly 1`] = `
+<ul role="menubar" class="header-navigation el-menu">
+  <li role="menuitem" tabindex="-1" class="el-menu-item header-navigation__item is-active" style="padding-left: 20px;">
+    Overview
+  </li>
+  <li role="menuitem" tabindex="-1" class="el-menu-item header-navigation__item" style="padding-left: 20px;">
+    Submit report
+  </li>
+  <li role="menuitem" aria-haspopup="true" class="el-submenu">
+    <div class="el-submenu__title" style="padding-left: 20px;">Questions
+      <i class="el-submenu__icon-arrow el-icon-arrow-down"></i>
+    </div>
+    <ul role="menu" class="el-menu el-menu--inline" style="display: none;">
+      <li role="menuitem" tabindex="-1" class="el-menu-item header-navigation__item" style="padding-left: 40px;">
+        List
+      </li>
+      <li role="menuitem" tabindex="-1" class="el-menu-item header-navigation__item" style="padding-left: 40px;">
+        Create
+      </li>
+    </ul>
+  </li>
+</ul>
+`;

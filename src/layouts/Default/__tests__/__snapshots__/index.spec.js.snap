@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Default layout is renders correctly 1`] = `<el-container-stub></el-container-stub>`;
