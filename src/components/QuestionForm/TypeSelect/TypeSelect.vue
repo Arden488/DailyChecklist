@@ -18,7 +18,6 @@ export default {
   },
   methods: {
     updateType: function (value) {
-      // console.log(value);
       this.$emit('type', value);
     }
   }
