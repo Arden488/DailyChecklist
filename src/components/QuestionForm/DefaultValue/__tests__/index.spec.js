@@ -4,22 +4,22 @@ import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import ElementUI from 'element-ui';
-import OptionsSettings from '../OptionsSettings.vue';
+import DefaultValue from '../DefaultValue.vue';
 
 const localVue = createLocalVue();
 localVue.use(VueRouter);
 
-describe('OptionsSettings layout', () => {
+describe('DefaultValue layout', () => {
   it('is a Vue instance', () => {
     localVue.use(ElementUI);
-    const wrapper = shallowMount(OptionsSettings, { 
+    const wrapper = shallowMount(DefaultValue, { 
       localVue
     });
     expect(wrapper.isVueInstance).toBeTruthy()
   })
 
   it('is renders correctly', () => {
-    const wrapper = shallowMount(OptionsSettings, { 
+    const wrapper = shallowMount(DefaultValue, { 
       localVue
     });
     expect(wrapper).toMatchSnapshot()
