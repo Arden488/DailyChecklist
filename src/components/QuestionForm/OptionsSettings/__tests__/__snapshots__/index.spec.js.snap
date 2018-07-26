@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OptionsSettings layout is renders correctly 1`] = `
+<div>
+  <vuecomponent-stub></vuecomponent-stub>
+  <!---->
+  <!---->
+  <!---->
+</div>
+`;

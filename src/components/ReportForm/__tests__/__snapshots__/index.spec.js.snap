@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReportForm layout is renders correctly 1`] = `<vuecomponent-stub model="[object Object]" label-width="200px"></vuecomponent-stub>`;

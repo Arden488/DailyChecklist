@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OverviewTable layout is renders correctly 1`] = `
+<div class="overview-table-box">
+  <div class="overview-table">
+    <div class="overview-table__header">
+      <div class="overview-table__col-head overview-table__col-head_first">&nbsp;</div>
+    </div>
+    <div class="overview-table__body">
+      <div class="overview-table__col overview-table__col_first"></div>
+    </div>
+  </div>
+</div>
+`;
