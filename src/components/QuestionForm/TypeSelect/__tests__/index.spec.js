@@ -15,7 +15,7 @@ beforeAll(() => {
   wrapper = shallowMount(TypeSelect, { localVue });
 });
 
-describe('Default layout', () => {
+describe('TypeSelect component', () => {
   it('is a Vue instance', () => {
     expect(wrapper.isVueInstance).toBeTruthy()
   })
