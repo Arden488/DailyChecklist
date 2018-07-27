@@ -10,60 +10,12 @@
 
       <div class="overview-table__body">
         <div class="overview-table__col overview-table__col_first">
-          <div class="overview-table__row" v-for="question in questions" :key="question._id">
+          <div class="overview-table__row" v-for="(question, index) in questions" :key="index">
             {{question}}
           </div>
         </div>
         <div class="overview-table__col" v-for="day in days" :key="day">
-          <div class="overview-table__row" v-if="reports[day]" v-for="(question, index) in questions"  :key="question._id">
-            <div v-if="reports[day][index].fieldType === 'time'">
-              <el-tooltip :content="reports[day][index].value" placement="top">
-                <div class="overview-table__cell overview-table__cell_green" v-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 2">
-                  <div class="overview-table__dot"></div>
-                </div>
-                <div class="overview-table__cell overview-table__cell_orange" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 1">
-                  <div class="overview-table__dot"></div>
-                </div>
-                <div class="overview-table__cell overview-table__cell_red" v-else-if="compareTimeToInt(reports[day][index].value, reports[day][index].options.badEndsOn, reports[day][index].options.goodStartsOn) === 0">
-                  <div class="overview-table__dot"></div>
-                </div>
-              </el-tooltip>
-            </div>
-            
-            <div v-if="reports[day][index].fieldType === 'boolean'">
-              <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value == 'true'">
-                <i class="el-icon-check"></i>
-              </div>
-              <div class="overview-table__cell overview-table__cell_red" v-if="reports[day][index].value == 'false'">
-                <i class="el-icon-close"></i>
-              </div>
-            </div>
-
-            <div v-if="reports[day][index].fieldType === 'mood'">
-              <el-tooltip :content="reports[day][index].value" placement="top">
-                <div class="overview-table__cell overview-table__cell_green" v-if="reports[day][index].value >= 7">
-                  <i class="icon-rate-face-3" style="color: rgb(0, 169, 16)"></i>
-                </div>
-                <div class="overview-table__cell overview-table__cell_red" v-else-if="reports[day][index].value <= 4">
-                  <i class="icon-rate-face-1" style="color: rgb(255, 0, 0)"></i>
-                </div>
-                <div class="overview-table__cell overview-table__cell_blue" v-else>
-                  <i class="icon-rate-face-2" style="color: #00b4ff"></i>
-                </div>
-              </el-tooltip>
-            </div>
-
-            <div v-if="reports[day][index].fieldType === 'select'">
-              <el-tooltip :content="reports[day][index].selectedOption.label" placement="top">
-                <div class="overview-table__cell" :style="{ background: addColorOpacity(reports[day][index].selectedOption.color, .12) } ">
-                  <!-- v-if="reports[day][index].value === 2" -->
-                  <div class="overview-table__dot" :style="{ background: reports[day][index].selectedOption.color } "></div>
-                </div>
-              </el-tooltip>
-            </div>
-          </div>
-          <div class="overview-table__row overview-table__row_tobefilled" v-else-if="day > new Date().getDate()">&nbsp;</div>
-          <div class="overview-table__row overview-table__row_empty" v-else>&nbsp;</div>
+          <OverviewTableRow v-for="(question, index) in questions" :key="index" :rowData="getAnswer(reports[day], question)" :day="day" />
         </div>
       </div>
     </div>
@@ -71,9 +23,14 @@
 </template>
 
 <script>
+import OverviewTableRow from '@/components/OverviewTable/OverviewTableRow/OverviewTableRow.vue';
+
 export default {
   name: 'OverviewTable',
-  props: ['reports', 'questions'],
+  components: {
+    OverviewTableRow,
+  },
+  props: ['reports'],
   data () {
     return {
       year: new Date().getFullYear(),
@@ -81,6 +38,18 @@ export default {
       numberOfDays: 0,
       days: [],
       namesOfDay: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    }
+  },
+  computed: {
+    questions: function() {
+      const questions = [];
+      for (let i = 0; i < Object.keys(this.reports).length; i++) {
+        const rep = this.reports[Object.keys(this.reports)[i]];
+        rep.forEach(el => {
+          questions.push(el.label);
+        });
+      }
+      return questions;
     }
   },
   methods: {
@@ -93,36 +62,19 @@ export default {
         this.days.push(i);
     },
 
-    addColorOpacity(hex, targetOpacity) {
-      const rgb = this.hexToRgb(hex);
-      return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${targetOpacity})`;
-    },
+    getAnswer(report, question) {
+      if (!report) return null;
 
-    hexToRgb(hex) {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-      } : null;
-    },
-
-    compareTimeToInt(time, bad, good) {
-      const timeInt = time.split(':')[0];
-
-      if (+timeInt <= +good)
-        return 2;
-
-      if (+timeInt > +good && +timeInt < +bad)
-        return 1;
-
-      return 0;
+      for (let i = 0; report.length > i; i++) {
+        if (report[i].label === question)
+          return report[i];
+      }
     },
   },
   mounted () {
     this.setNumberOfDays();
     this.populateDays();
-  }
+  },
 }
 </script>
 
@@ -139,7 +91,7 @@ export default {
     display: grid;
     grid-gap: 1px;
     grid-template-columns: 200px repeat(auto-fit, 40px);
-    grid-template-rows: 30px;
+    grid-template-rows: 35px;
     grid-auto-flow: row;
     /* background: blue; */
   }
@@ -148,6 +100,7 @@ export default {
     background: #ebeef5;
     line-height: 25px;
     text-align: center;
+    height: 25px;
     padding: 5px 10px;
   }
 
@@ -164,6 +117,7 @@ export default {
 
   .overview-table__row {
     text-align: center;
+    height: 35px;
     line-height: 25px;
     background: rgba(243, 243, 243, .3);
     position: relative;
@@ -186,6 +140,7 @@ export default {
   .overview-table__col_first .overview-table__row {
     text-align: left;
     padding: 5px 10px;
+    height: 25px;
   }
 
   .overview-table__cell {
