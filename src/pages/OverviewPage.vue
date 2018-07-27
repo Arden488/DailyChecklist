@@ -2,7 +2,7 @@
   <div>
     <h1>Overview</h1>
 
-    <OverviewTable :reports="reports" :questions="questions" />
+    <OverviewTable v-if="isLoaded" :reports="reports" :questions="questions" />
   </div>
 </template>
 
@@ -17,6 +17,7 @@ export default {
   },
   data () {
     return {
+      isLoaded: false,
       questions: [],
       reportsData: [],
       reports: {},
@@ -53,6 +54,8 @@ export default {
           if (this.questions.indexOf(e.label) === -1)
             this.questions.push(e.label);
         });
+        
+        this.isLoaded = true;
       });
     }
   },
