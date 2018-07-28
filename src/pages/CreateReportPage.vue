@@ -78,8 +78,6 @@ export default {
 
         this.passedReportForm.fields.forEach((field, i) => {
           field.value = this.preprocessFieldValue(response.data[0].answers[i]);
-          
-          field.value = eq.value;
 
         this.editing = true;
         });
