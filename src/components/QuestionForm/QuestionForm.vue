@@ -12,6 +12,10 @@
       <TypeSelect :type="questionForm.type" v-on:type="switchType" />
     </el-form-item>
 
+    <el-form-item v-if="questionForm.type === 'boolean'" label="Inverse value">
+      <el-switch v-model="questionForm.options.reverse"></el-switch>
+    </el-form-item>
+
     <el-form-item v-if="questionForm.type !== ''" label="Default value">
       <DefaultValue 
         :type="questionForm.type" 
@@ -76,6 +80,7 @@ export default {
         options: {
           rangeStart: 0,
           rangeEnd: 1,
+          reverse: false,
           values: [],
           badEndsOn: null,
           goodStartsOn: null
@@ -101,6 +106,7 @@ export default {
       this.questionForm.options = {
         rangeStart: 0,
         rangeEnd: 1,
+        reverse: false,
         values: [],
         badEndsOn: null,
         goodStartsOn: null
@@ -170,6 +176,10 @@ export default {
 
           if (this.questionForm.type === 'select') {
             formData.optionsValues = this.questionForm.options.values;
+          }
+
+          if (this.questionForm.type === 'boolean') {
+            formData.optionsReverse = this.questionForm.options.reverse;
           }
           
           if (this.passedQuestionForm) {
