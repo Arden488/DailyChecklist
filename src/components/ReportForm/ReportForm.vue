@@ -33,7 +33,7 @@
       <el-select 
         v-if="field.type === 'select'" 
         v-model="field.value"
-        placeholder="Select"
+        placeholder="Select one"
       >
         <el-option
           v-for="item in field.options.values"
