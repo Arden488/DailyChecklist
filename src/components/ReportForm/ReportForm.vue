@@ -55,7 +55,7 @@ import ReportsService from '@/services/ReportsService';
 
 export default {
   name: 'ReportForm',
-  props: ['passedReportForm', 'translateIntToTime'],
+  props: ['passedReportForm', 'translateIntToTime', 'editing'],
   data () {
     return {
       appForm: Object.assign({
