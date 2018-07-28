@@ -43,15 +43,22 @@ export default {
       return `${s}:00`;
     },
 
+    preprocessFieldValue(field) {
+      if(field.type === 'time') field.value = this.translateIntToTime(field.value);
+      if(field.type === 'mood') field.value = parseInt(field.value);
+      if(field.type === 'boolean') field.value = !!(field.value == 'true');
+
+      return field.value;
+    },
+
     async getQuestions () {
       const response = await QuestionsService.fetchQuestions()
       response.data.items.forEach(el => {
-        if(el.type === 'time') el.value = this.translateIntToTime(el.value);
-        if(el.type === 'mood') el.value = +el.value;
+        el.value = this.preprocessFieldValue(el);
 
         this.passedReportForm.fields.push({
           label: el.title,
-          value: el.value || false,
+          value: el.value,
           type: el.type,
           options: el.options
         });
@@ -70,13 +77,8 @@ export default {
         this.passedReportForm.id = response.data[0]._id;
 
         this.passedReportForm.fields.forEach((field, i) => {
-          const eq = response.data[0].answers[i];
-          if (field.type === 'boolean') {
-            eq.value = !!(eq.value == 'true');
-          } else if (field.type === 'mood') {
-            eq.value = +eq.value;
-          }
-
+          field.value = this.preprocessFieldValue(response.data[0].answers[i]);
+          
           field.value = eq.value;
 
         this.editing = true;
