@@ -44,9 +44,9 @@ export default {
     },
 
     preprocessFieldValue(field) {
-      if(field.type === 'time') field.value = this.translateIntToTime(field.value);
-      if(field.type === 'mood') field.value = parseInt(field.value);
-      if(field.type === 'boolean') field.value = !!(field.value == 'true');
+      if(field.fieldType === 'time') field.value = this.translateIntToTime(field.value);
+      if(field.fieldType === 'mood') field.value = parseInt(field.value);
+      if(field.fieldType === 'boolean') field.value = !!(field.value == 'true');
 
       return field.value;
     },
