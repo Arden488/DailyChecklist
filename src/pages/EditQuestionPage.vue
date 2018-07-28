@@ -61,6 +61,10 @@ export default {
         this.passedQuestionForm.options.goodStartsOn = response.data.options.goodStartsOn;
       }
 
+      if (response.data.options.reverse) {
+        this.passedQuestionForm.options.reverse = response.data.options.reverse;
+      }
+
       if (response.data.options.values) {
         this.passedQuestionForm.options.values = response.data.options.values;
       }
