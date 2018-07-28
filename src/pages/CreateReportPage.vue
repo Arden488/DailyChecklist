@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="max-width: 700px" v-if="passedReportForm.fields.length > 0">
+    <div style="max-width: 700px">
       <el-alert
         v-if="editing"
         title="Editing existing record"
@@ -10,10 +10,8 @@
         style="margin-bottom: 30px;"
       >
       </el-alert>
-
-      
     </div>
-    <ReportForm :passedReportForm="passedReportForm" :translateIntToTime="translateIntToTime" />
+    <ReportForm v-if="isLoaded" :editing="editing" :passedReportForm="passedReportForm" :translateIntToTime="translateIntToTime" />
   </div>
 </template>
 
@@ -30,6 +28,7 @@ export default {
   },
   data() {
     return {
+      isLoaded: false,
       passedReportForm: {
         fields: [],
       },
@@ -44,11 +43,22 @@ export default {
     },
 
     preprocessFieldValue(field) {
-      if(field.fieldType === 'time') field.value = this.translateIntToTime(field.value);
-      if(field.fieldType === 'mood') field.value = parseInt(field.value);
-      if(field.fieldType === 'boolean') field.value = !!(field.value == 'true');
+      if(field.fieldType === 'time' || field.type === 'time') field.value = this.translateIntToTime(field.value);
+      if(field.fieldType === 'mood' || field.type === 'mood') field.value = parseInt(field.value);
+      if(field.fieldType === 'boolean' || field.type === 'boolean') field.value = !!(field.value == 'true');
 
       return field.value;
+    },
+
+    async loadQuestions () {
+      const existing = this.getReport(new Date());
+
+      existing.then(res => {
+        console.log(res);
+        if (!res) {
+          this.getQuestions();
+        }
+      })
     },
 
     async getQuestions () {
@@ -62,9 +72,9 @@ export default {
           type: el.type,
           options: el.options
         });
-      });
 
-      this.getReport(new Date());
+        this.isLoaded = true;
+      });
     },
 
     async getReport (date) {
@@ -76,16 +86,27 @@ export default {
       if (response.data.length > 0) {
         this.passedReportForm.id = response.data[0]._id;
 
-        this.passedReportForm.fields.forEach((field, i) => {
-          field.value = this.preprocessFieldValue(response.data[0].answers[i]);
+        response.data[0].answers.forEach((el, i) => {
+          el.value = this.preprocessFieldValue(el);
+
+          this.passedReportForm.fields.push({
+            label: el.label,
+            value: el.value,
+            type: el.fieldType,
+            options: el.options
+          });
+        });
 
         this.editing = true;
-        });
+        this.isLoaded = true;
+        return true;
       }
+
+      return false;
     }
   },
   mounted() {
-    this.getQuestions();
+    this.loadQuestions();
   }
 }
 </script>
