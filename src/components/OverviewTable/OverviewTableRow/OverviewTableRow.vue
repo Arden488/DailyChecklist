@@ -15,10 +15,10 @@
     </div>
     
     <div v-if="rowData.fieldType === 'boolean'">
-      <div class="overview-table__cell overview-table__cell_green" v-if="rowData.value == !rowData.reverse">
+      <div class="overview-table__cell overview-table__cell_green" v-if="rowData.value === !!!rowData.options.reverse">
         <i class="el-icon-check"></i>
       </div>
-      <div class="overview-table__cell overview-table__cell_red" v-if="rowData.value == !rowData.reverse">
+      <div class="overview-table__cell overview-table__cell_red" v-if="rowData.value === !!rowData.options.reverse">
         <i class="el-icon-close"></i>
       </div>
     </div>
