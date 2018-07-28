@@ -46,7 +46,8 @@ export default {
       for (let i = 0; i < Object.keys(this.reports).length; i++) {
         const rep = this.reports[Object.keys(this.reports)[i]];
         rep.forEach(el => {
-          questions.push(el.label);
+          if(questions.indexOf(el.label) === -1)
+            questions.push(el.label);
         });
       }
       return questions;
