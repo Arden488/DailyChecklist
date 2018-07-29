@@ -32,11 +32,24 @@ export default {
       passedReportForm: {
         fields: [],
       },
-      editing: false
+      editing: false,
+      daysMap: {
+        0: 'sun',
+        1: 'mon',
+        2: 'tue',
+        3: 'wed',
+        4: 'thu',
+        5: 'fri',
+        6: 'sat',
+      }
     };
   },
   methods: {
     translateIntToTime(int) {
+      if (typeof int !== 'number') {
+        int = ( int.length > 1 ? parseInt(int) : parseInt(int[0] + int[1]) ) || 0;
+      }
+
       let s = int + '';
       s = s.length === 1 ? '0' + s : s;
       return `${s}:00`;
@@ -54,7 +67,6 @@ export default {
       const existing = this.getReport(new Date());
 
       existing.then(res => {
-        console.log(res);
         if (!res) {
           this.getQuestions();
         }
@@ -66,35 +78,41 @@ export default {
       response.data.items.forEach(el => {
         el.value = this.preprocessFieldValue(el);
 
-        this.passedReportForm.fields.push({
-          label: el.title,
-          value: el.value,
-          type: el.type,
-          options: el.options
-        });
-
-        this.isLoaded = true;
+        if (el.repeat === 'daily' || el.repeat.indexOf(this.daysMap[new Date().getDay()]) !== -1) {
+          this.passedReportForm.fields.push({
+            label: el.title,
+            value: el.value,
+            repeat: el.repeat,
+            type: el.type,
+            options: el.options
+          });
+        }
       });
+      this.isLoaded = true;
     },
 
     async getReport (date) {
       const year = date.getFullYear();
       const month = ('0' + (date.getMonth() + 1)).slice(-2);
       const dateNum = date.getDate();
-      const response = await ReportsService.getReportByDate(year, month, dateNum);
+      const time = date.getHours() + ':' + date.getMinutes()
+      const response = await ReportsService.getReportByDate(year, month, dateNum, time);
       
       if (response.data.length > 0) {
         this.passedReportForm.id = response.data[0]._id;
 
-        response.data[0].answers.forEach((el, i) => {
+        response.data[0].answers.forEach(el => {
           el.value = this.preprocessFieldValue(el);
 
-          this.passedReportForm.fields.push({
-            label: el.label,
-            value: el.value,
-            type: el.fieldType,
-            options: el.options
-          });
+          if (el.repeat === 'daily' || el.repeat.indexOf(this.daysMap[new Date().getDay()]) !== -1) {
+            this.passedReportForm.fields.push({
+              label: el.label,
+              value: el.value,
+              repeat: el.repeat,
+              type: el.fieldType,
+              options: el.options
+            });
+          }
         });
 
         this.editing = true;
