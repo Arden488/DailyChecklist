@@ -24,7 +24,7 @@
     </div>
 
     <div v-if="rowData.fieldType === 'mood'">
-      <el-tooltip :content="rowData.value" placement="top">
+      <el-tooltip :content="rowData.value+''" placement="top">
         <div class="overview-table__cell overview-table__cell_green" v-if="rowData.value >= 7">
           <i class="icon-rate-face-3" style="color: rgb(0, 169, 16)"></i>
         </div>
